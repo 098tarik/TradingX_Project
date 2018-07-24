@@ -1,0 +1,37 @@
+form {
+  border: 7px dotted gray;
+}
+header{
+  background-color: black;
+  text-decoration: underline;
+  color: white;
+  font-size: 16px;
+  text-align: justify;
+  margin: -8px;
+}
+.logout-redirect{
+  padding: 14px 16px;
+  color: white;
+  float: right;
+}
+.message-redirect{
+  color: white;
+  padding: 14px 16px;
+  margin-left: 1250px;
+}
+input{
+  width: 150px;
+  height: 20px;
+  border-radius: 20px;
+  border-style: groove;
+}
+
+input[type="file"]{
+  border-radius: none;
+}
+img {
+  position: relative;
+  height: 100px;
+  margin: 10px ;
+
+}
