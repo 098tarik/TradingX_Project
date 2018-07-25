@@ -140,20 +140,11 @@ class Message(object):
             'time': self.timestamp.strftime('%I:%M:%S')
         }
         return result
-class UserPhoto(ndb.Model):
-    user = ndb.StringProperty()
-    blob_key = ndb.BlobKeyProperty()
+
 
 class CssiUser(ndb.Model):
-  """CssiUser stores information about a logged-in user.
-  The AppEngine users api stores just a couple of pieces of
-  info about logged-in users: a unique id and their email address.
-  If you want to store more info (e.g. their real name, high score,
-  preferences, etc, you need to create a Datastore model like this
-  example).  
-  """
-  
-  # user sign in datastore
+ 
+  # user sign in datastore, this object stores user information
   first_name = ndb.StringProperty()
   last_name = ndb.StringProperty()
   username = ndb.StringProperty()
@@ -161,18 +152,20 @@ class CssiUser(ndb.Model):
   gender = ndb.StringProperty()
   location = ndb.StringProperty()
 class Product(ndb.Model):
-  #product post datastore
+  #product datastore, this object stores product information
   product_name = ndb.StringProperty()
   product_description = ndb.StringProperty()
   product_picture = ndb.BlobProperty()
   trade_request = ndb.StringProperty()
 
+#This handler allows the user to sign in at the bottom of the hompage if not logged in
 class SignHandler(webapp2.RequestHandler):
  def get(self):
     	content = TEMPLATE.get_template('templates/signup.html')
         self.response.write(content.render() % (
           users.create_login_url('/')) )
-        
+          
+#requests user information once that specific user is logged in the post method
  def post(self):
     user = users.get_current_user()
     if not user:
@@ -189,18 +182,21 @@ class SignHandler(webapp2.RequestHandler):
     cssi_user.put()
     self.redirect('/')
  
+#handler renders the home page html template
 class HomeHandler(webapp2.RequestHandler):
     def get(self):
         content = TEMPLATE.get_template('home.html')
         self.response.write(content.render())
     
+#handler allows the user to pose ONLY when they are logged in, if they are not logged in they must sign in at the bottom
+#of the page
 class MainHandler(webapp2.RequestHandler):
   def get(self):
     user = users.get_current_user()
     content = TEMPLATE.get_template('templates/post.html')
+    sign_in = TEMPLATE.get_template('templates/signin.html')
     # If the user is logged in...
     if user:
-    
       email_address = user.nickname()
       cssi_user = CssiUser.get_by_id(user.user_id())
       upload_url = blobstore.create_upload_url('/upload_photo')
@@ -213,11 +209,13 @@ class MainHandler(webapp2.RequestHandler):
         self.redirect('/register')
     # Otherwise, the user isn't logged in!
     else:
+      self.response.write(sign_in.render())
       self.response.write('''
         Please log in to use our site! <br>
         <a href="%s">Sign in</a>''' % (
           users.create_login_url('/')))
-
+      
+#requests the users product data from the post method and serves it back to the user in the post page
 #class FormHandler(webapp2.RequestHandler):
   def post(self):
     user = users.get_current_user()
@@ -227,6 +225,8 @@ class MainHandler(webapp2.RequestHandler):
       # You shouldn't be able to get here without being logged in
       self.error(500)
       return
+      
+    # gets and stores all user info
     first_name=self.request.get('firstname')
     last_name=self.request.get('lastname')
     username=self.request.get('Username')
@@ -237,6 +237,8 @@ class MainHandler(webapp2.RequestHandler):
     username=username,
     gender=gender,
     email=email)
+    
+    #gets and stores all product info
     product_picture = self.request.get('img')
     logging.info("picture: %d" % len(product_picture))
     product_name=self.request.get('product_name')
@@ -245,21 +247,36 @@ class MainHandler(webapp2.RequestHandler):
     id=user.user_id()
     product = Product(product_picture=product_picture,product_name=product_name, product_description=product_description, trade_request=trade_request, id=id)
     product.put()
+    #converts binary photo string to base 64 to allow it to be displayed back to the user
     s = str(product_picture).encode('base64')
     content = TEMPLATE.get_template('templates/post.html')
     self.response.write(content.render(s=s,product_name=product_name, product_description=product_description, trade_request=trade_request))
     
-#class Image(webapp2.RequestHandler):
-#    def get(self):
-#        greeting_key = ndb.Key(urlsafe=self.request.get('img'))
-#        greeting = greeting_key.get()
-#        if greeting.avatar:
-#            self.response.headers['Content-Type'] = 'image/png'
-#            self.response.out.write(greeting.avatar)
-#        else:
-#            self.response.out.write('No image')
+class ElectronicsHandler(webapp2.RequestHandler):
+    def get(self):
+       posts = Product.query().fetch()
+       for post in posts:
+        s = str(post.product_picture).encode('base64')
+        self.response.out.write( '''
+        <header>
+        <br>
+        <br>
+    <a href="{{ signout_link_html }}" class="logout-redirect">Logout</a>
+    <a href="/msg" class="message-redirect">Message</a>
+    <a href="/home" class="message-redirect">Go Home</a>
+    <br>
+    <br>
+  </header>
+    <img height="100px" width="100px" src="data:image/jpg;base64,%s">
+      <br>
+      <br>
+      <label class="product_name">Product Name: %s</label> <br>
+      <label class="product_description">Product Description: %s</label> <br>
+      <label class="trade_request">Willing to trade for: %s</label>
+    </div>) ''' % (s,post.product_name,post.product_description,post.trade_request))
 app = webapp2.WSGIApplication([
   ('/register', SignHandler),
+  ('/electronics', ElectronicsHandler),
    ('/home', HomeHandler),
   ('/', MainHandler),
 #  ('/new_entry', FormHandler),

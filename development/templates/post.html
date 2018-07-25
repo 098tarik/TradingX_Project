@@ -44,6 +44,7 @@
          $('#img_url')[0].src = (window.URL ? URL : webkitURL).createObjectURL(input.files[0]);
       }
       </script>
+      <label>Image must be under 1 MB!</label>
       <input type="file" id="product_picture" onChange="img_pathUrl(this);" name = "img">
       <br>
       <input type="submit">
@@ -54,8 +55,8 @@
       <img height="100px" width="100px" src="data:image/jpg;base64,{{ s }}">
       <br>
       <br>
-      <label class="product_name">Product Name: {{ product_name }}</label>
-      <label class="product_description">Product Description: {{ product_description }}</label>
+      <label class="product_name">Product Name: {{ product_name }}</label> <br>
+      <label class="product_description">Product Description: {{ product_description }}</label> <br>
       <label class="trade_request">Willing to trade for: {{ trade_request }}</label>
     </div>
     <br>  
