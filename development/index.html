@@ -1,6 +1,13 @@
 
 <html>
   <head>
+  <link rel="stylesheet" href="css/animate.css">
+	<!-- Icomoon Icon Fonts-->
+	<link rel="stylesheet" href="css/icomoon.css">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<!-- Theme style  -->
+	<link rel="stylesheet" href="css/style.css">
     <script>
 function sendRequest(destinationUrl, callbackFunction, parameters) {
   var xmlHttp = new XMLHttpRequest();
@@ -72,13 +79,6 @@ setInterval(handleLoad, 5000);
     .messagetext {
       display: block;
     }
-    #messagearea {
-      font-family: Tahoma;
-      font-size: 8pt;
-      padding: 10px;
-      border: 3px solid magenta;
-      margin-top: 5px;
-    }
     .message {
       background-color: lightblue;
       margin: 5px;
@@ -91,7 +91,10 @@ setInterval(handleLoad, 5000);
   <body>
     <div id="error"></div>
     <input id="textfield"><input type="button" value="Send Message" onclick="handleSend();">
-    <div id="messagearea">
+    <form action ="/home">
+    <input type="submit" value="Go Home">
+    </form>
+    <div class="container" id="messagearea">
     </div>
   </body>
 </html>
