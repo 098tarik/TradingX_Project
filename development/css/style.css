@@ -1308,5 +1308,19 @@ blockquote .person cite {
   padding-left: 10px;
   padding-right: 10px;
   width: 70px;
+  margin-left: 840px;
+}
+#product_container{
+  margin-left: 150px;
+  margin-top: 100px;
+}
+.no_post_page{
+  margin-left: 250px;
+  font-size: 70px;
+  font-weight: bold;
+  padding: 200px;
+}
+.posts_feed{
+    margin-left: 50px
 }
 /*# sourceMappingURL=style.css.map */

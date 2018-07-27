@@ -1,25 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
+  <title>TradingX</title>
+    <!--
   <link rel="stylesheet" href="css/animate.css">
+-->
 	<!-- Icomoon Icon Fonts-->
+  <!--
 	<link rel="stylesheet" href="css/icomoon.css">
+-->
 	<!-- Bootstrap  -->
+  <!--
 	<link rel="stylesheet" href="css/bootstrap.css">
+-->
 	<!-- Theme style  -->
+  <!--
 	<link rel="stylesheet" href="css/style.css">
+-->
     <meta charset="utf-8">
     <link rel="stylesheet" href="/css/post.css"/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <title>Post Page</title>
-  </head> 
+  </head>
   <header class="fh5co-top-menu menu-1 text-center">
-    <a href="{{ signout_link_html }}" class="message-redirect">Logout</a>
-    <a href="/msg" class="message-redirect">Message</a>
-    <a href="/home" class="message-redirect">Go Home</a>
+    <a href="/home" align="center" class="message1">TRADINGX</a>
+    <a href="{{ signout_link_html }}" class="message-redirect message2">Logout</a>
     <br>
     <br>
   </header>
+  <style>
+  label {
+      color:white;
+  }
+  body {
+
+background-image: url("https://raw.githubusercontent.com/noyoshi/wallpapers/master/kzg_space.jpg");
+
+} </style>
   <body>
     <br>
     <form align="center" method="post"  action="/" enctype="multipart/form-data">
@@ -51,8 +68,10 @@
          $('#img_url')[0].src = (window.URL ? URL : webkitURL).createObjectURL(input.files[0]);
       }
       </script>
-      <label class = "label">Image must be under 1 MB!</label>
+      <label class = "label2">Image must be under 1 MB!</label>
+      <br>
       <input style="text-align:center;" type="file" id="product_picture" onChange="img_pathUrl(this);" name = "img">
+      <br>
       <br>
       <input type="submit">
       <br>
@@ -66,6 +85,6 @@
       <label class="product_description">Product Description: {{ product_description }}</label> <br>
       <label class="trade_request">Willing to trade for: {{ trade_request }}</label>
     </div>
-    <br>  
+    <br>
 </body>
 </head>

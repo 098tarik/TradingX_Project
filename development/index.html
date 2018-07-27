@@ -1,6 +1,7 @@
 
 <html>
   <head>
+  
   <link rel="stylesheet" href="css/animate.css">
 	<!-- Icomoon Icon Fonts-->
 	<link rel="stylesheet" href="css/icomoon.css">
@@ -8,6 +9,20 @@
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
+	
+	<nav class="fh5co-nav" role="navigation">
+		<div class="container">
+			<div class="fh5co-top-logo">
+				<div id="fh5co-logo"><a href="/home">TradingX</a></div>
+			</div>
+			<div class="fh5co-top-menu menu-1 text-center">
+	
+			</div>
+			<div class="fh5co-top-social menu-1 text-right">
+				<p><a href="/" class="btn btn-primary" id="logout_button">Logout</a></p>
+			</div>
+		</div>
+	</nav>
     <script>
 function sendRequest(destinationUrl, callbackFunction, parameters) {
   var xmlHttp = new XMLHttpRequest();
@@ -73,6 +88,10 @@ getUser();
 setInterval(handleLoad, 5000);
     </script>
     <style>
+    body {
+        
+        background-image: url("https://raw.githubusercontent.com/noyoshi/wallpapers/master/earth2.jpg");
+    }
     .messageemail {
       font-weight: bold;
     }
@@ -80,21 +99,66 @@ setInterval(handleLoad, 5000);
       display: block;
     }
     .message {
-      background-color: lightblue;
+      background-color: aliceblue;
       margin: 5px;
       padding: 3px;
       padding-left: 10px;
       padding-bottom: 10px;
     }
+    header {
+  background-color: black;
+  margin: -8px;
+}
+.message2 {
+  text-decoration: underline;
+  color: white;
+  font-size: 16px;
+  text-align: right;
+  margin: -8px;
+  font-family: "Montserrat", Arial, sans-serif;
+  font-weight: bold;
+}
+.message1 {
+  text-decoration: none;
+  color: white;
+  font-size: 20px;
+  float: left;
+  font-family: "Montserrat", Arial, sans-serif;
+  font-weight: bold;
+  line-height: 1.7;
+  padding: 10px;
+}
+.logout-redirect{
+  padding: 14px 16px;
+  color: white;
+  float: right;
+}
+.message-redirect{
+  color: white;
+  padding: 14px 16px;
+  margin-left: 1250px;
+  }
+#message_container {
+    margin-top: 100px;
+    padding: 150px;
+}
+#logout_button {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 840px;
+}
     </style>
   </head>
   <body>
-    <div id="error"></div>
-    <input id="textfield"><input type="button" value="Send Message" onclick="handleSend();">
-    <form action ="/home">
-    <input type="submit" value="Go Home">
-    </form>
-    <div class="container" id="messagearea">
+    <div id="message_container">
+        <div id="error"></div>
+        <input id="textfield"><input type="button" value="Send Message" onclick="handleSend();">
+        <form action ="/home">
+        <input type="submit" value="Go Home">
+        </form>
+        <div class="container" id="messagearea">
+        </div>
     </div>
+    
   </body>
 </html>

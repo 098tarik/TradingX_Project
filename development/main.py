@@ -1,3 +1,4 @@
+
 """Simple example app to demonstrate storing info for users.
 CSSI-ers!  If you want to have users log in to your site and store
 info about them, here is a simple AppEngine app demonstrating
@@ -155,52 +156,54 @@ class CssiUser(ndb.Model):
 
 #This handler allows the user to sign in at the bottom of the hompage if not logged in
 class SignHandler(webapp2.RequestHandler):
- def get(self):
-    	content = TEMPLATE.get_template('templates/signup.html')
+  def get(self):
+        content = TEMPLATE.get_template('templates/signup.html')
         self.response.write(content.render() % (
-          users.create_login_url('/')) )
+          users.create_login_url('/')))
+    
           
-#requests user information once that specific user is logged in the post method
- def post(self):
-    user = users.get_current_user()
-    if not user:
-      # You shouldn't be able to get here without being logged in
-      self.error(500)
-      return
+  #requests user information once that specific user is logged in the post method
+  def post(self):
     cssi_user= CssiUser(
         first_name=self.request.get('firstname'),
         last_name=self.request.get('lastname'),
         username=self.request.get('Username'),
         gender=self.request.get('gender'),
         email=self.request.get('Email'),
-        id=user.user_id())
+        )
     cssi_user.put()
-    self.redirect('/')
+    self.redirect(users.create_login_url('/'))
  
 #handler renders the home page html template
 class HomeHandler(webapp2.RequestHandler):
     def get(self):
         content = TEMPLATE.get_template('home.html')
         self.response.write(content.render())
+    def post(self):
+        content = TEMPLATE.get_template('home.html')
+        self.response.write(content.render())
+    
     
 #handler allows the user to pose ONLY when they are logged in, if they are not logged in they must sign in at the bottom
 #of the page
 class MainHandler(webapp2.RequestHandler):
   def get(self):
     user = users.get_current_user()
+    print user
     content = TEMPLATE.get_template('templates/post.html')
     sign_in = TEMPLATE.get_template('templates/signin.html')
     # If the user is logged in...
     if user:
-      email_address = user.nickname()
-      cssi_user = CssiUser.get_by_id(user.user_id())
+      email_address = users.get_current_user().email()
+      print email_address
+      cssi_user = CssiUser.query().filter(CssiUser.email == email_address)
       upload_url = blobstore.create_upload_url('/upload_photo')
       signout_link_html =  users.create_logout_url('/')
       # If the user has previously been to our site, we greet them!
       if cssi_user:
         self.response.write(content.render(signout_link_html=signout_link_html))
       # If the user hasn't been to our site, we ask them to sign up
-      elif cssi_user == None:
+      else:
         self.redirect('/register')
     # Otherwise, the user isn't logged in!
     else:
@@ -212,7 +215,6 @@ class MainHandler(webapp2.RequestHandler):
 #class FormHandler(webapp2.RequestHandler):
   def post(self):
     user = users.get_current_user()
-    
     first_name = self.request.get('username')
     if not user:
       # You shouldn't be able to get here without being logged in
@@ -240,14 +242,18 @@ class MainHandler(webapp2.RequestHandler):
     product_name=self.request.get('product_name')
     product_description=self.request.get('product_description')
     trade_request=self.request.get('trade_request')
-    id=user.user_id()
-    product = Product(category = category,product_picture=product_picture,product_name=product_name, product_description=product_description, trade_request=trade_request, id=id)
+    product = Product(category = category,product_picture=product_picture,product_name=product_name, product_description=product_description, trade_request=trade_request)
     product.put()
     #converts binary photo string to base 64 to allow it to be displayed back to the user
     s = str(product_picture).encode('base64')
     content = TEMPLATE.get_template('templates/post.html')
     self.response.write(content.render(s=s,product_name=product_name, product_description=product_description, trade_request=trade_request))
+class ViewHandler(webapp2.RequestHandler):
+    def get(self):
+        content = TEMPLATE.get_template('templates/view.html')
+        self.response.write(content.render())
     
+        
 #class ElectronicsHandler(webapp2.RequestHandler):
 #    def get(self):
 #       posts = Product.query().fetch()
@@ -271,6 +277,7 @@ class MainHandler(webapp2.RequestHandler):
 #      <label class="trade_request">Willing to trade for: %s</label>
 #    </div>) ''' % (s,post.product_name,post.product_description,post.trade_request))
 app = webapp2.WSGIApplication([
+  (('/view'), ViewHandler),
   ('/register', SignHandler),
   ('/electronics', ElectronicsHandler),
   ('/books', BooksHandler),
